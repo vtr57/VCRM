@@ -15,7 +15,7 @@ describe("AppShell", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("Sales Command")).toBeInTheDocument();
+    expect(screen.getByText("VCRM")).toBeInTheDocument();
     expect(screen.getByText("Dashboard content")).toBeInTheDocument();
   });
 });

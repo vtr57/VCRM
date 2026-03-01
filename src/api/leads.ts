@@ -25,7 +25,7 @@ export interface LeadWritePayload {
   tag_ids?: string[];
 }
 
-function buildQuery(params: Record<string, string | number | undefined>) {
+function buildQuery(params: LeadFilters) {
   const searchParams = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {
     if (value === undefined || value === "") {
