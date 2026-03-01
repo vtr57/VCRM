@@ -29,6 +29,7 @@ export function LoginPage() {
   return (
     <section className="auth-page">
       <div className="auth-card">
+        <img className="auth-card__logo" src="/VCRM.png" alt="VCRM" />
         <form className="auth-form" onSubmit={handleSubmit}>
           <label className="form-field">
             <span>Email</span>
