@@ -29,12 +29,6 @@ export function LoginPage() {
   return (
     <section className="auth-page">
       <div className="auth-card">
-        <p className="section-eyebrow">Autenticação</p>
-        <h1>Acesse o workspace comercial</h1>
-        <p className="section-copy">
-          O frontend agora consome o núcleo de autenticação com JWT, refresh token e contexto de
-          organização ativo.
-        </p>
         <form className="auth-form" onSubmit={handleSubmit}>
           <label className="form-field">
             <span>Email</span>
