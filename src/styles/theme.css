@@ -1,0 +1,19 @@
+:root {
+  --bg: #ffffff;
+  --bg-panel: rgba(255, 255, 255, 0.94);
+  --bg-panel-strong: #ffffff;
+  --bg-panel-muted: rgba(255, 255, 255, 0.98);
+  --line: rgba(150, 1, 0, 0.12);
+  --text: #1f1f1f;
+  --muted: #707070;
+  --accent: #960100;
+  --accent-strong: #7a0100;
+  --accent-soft: rgba(150, 1, 0, 0.08);
+  --success: #960100;
+  --danger: #960100;
+  --shadow: 0 24px 60px rgba(150, 1, 0, 0.08);
+  --shadow-soft: 0 14px 34px rgba(0, 0, 0, 0.06);
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+}
