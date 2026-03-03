@@ -1,3 +1,4 @@
+import { BuildingIcon, ContactCardIcon, MoneyBagIcon, UserIcon } from "@/components/icons/app-icons";
 import { formatCurrency } from "@/lib/formatters";
 import type { BoardDeal, BoardStage } from "@/types/pipeline";
 
@@ -62,25 +63,25 @@ export function KanbanBoard({
                 >
                   <div className="deal-card__meta card-meta-row">
                     <span aria-label="Nome" className="card-meta-icon" role="img" title="Nome">
-                      <i aria-hidden="true" className="fa-solid fa-user" />
+                      <UserIcon />
                     </span>
                     <strong>{deal.lead.full_name}</strong>
                   </div>
                   <div className="deal-card__meta card-meta-row">
                     <span aria-label="Empresa" className="card-meta-icon" role="img" title="Empresa">
-                      <i aria-hidden="true" className="fa-solid fa-building" />
+                      <BuildingIcon />
                     </span>
                     <strong>{deal.lead.company_name || "Sem empresa"}</strong>
                   </div>
                   <div className="deal-card__meta card-meta-row">
                     <span aria-label="Contato" className="card-meta-icon" role="img" title="Contato">
-                      <i aria-hidden="true" className="fa-solid fa-address-card" />
+                      <ContactCardIcon />
                     </span>
                     <strong>{deal.lead.phone || deal.lead.email || "Sem contato"}</strong>
                   </div>
                   <div className="deal-card__meta card-meta-row">
                     <span aria-label="Valor" className="card-meta-icon" role="img" title="Valor">
-                      <i aria-hidden="true" className="fa-solid fa-sack-dollar" />
+                      <MoneyBagIcon />
                     </span>
                     <strong>{formatCurrency(deal.amount)}</strong>
                   </div>

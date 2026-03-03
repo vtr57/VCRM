@@ -2,6 +2,7 @@ import { useDeferredValue, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { getLeads } from "@/api/leads";
+import { BuildingIcon, ContactCardIcon, MoneyBagIcon, UserIcon } from "@/components/icons/app-icons";
 import { formatCurrency } from "@/lib/formatters";
 import type { LeadListItem } from "@/types/leads";
 
@@ -73,25 +74,25 @@ export function PipelineLeadCreateCard({
                   <div className="lead-picker__meta">
                     <div className="card-meta-row">
                       <span aria-label="Nome" className="card-meta-icon" role="img" title="Nome">
-                        <i aria-hidden="true" className="fa-solid fa-user" />
+                        <UserIcon />
                       </span>
                       <strong>{lead.full_name}</strong>
                     </div>
                     <div className="card-meta-row">
                       <span aria-label="Empresa" className="card-meta-icon" role="img" title="Empresa">
-                        <i aria-hidden="true" className="fa-solid fa-building" />
+                        <BuildingIcon />
                       </span>
                       <strong>{lead.company_name || "Sem empresa"}</strong>
                     </div>
                     <div className="card-meta-row">
                       <span aria-label="Contato" className="card-meta-icon" role="img" title="Contato">
-                        <i aria-hidden="true" className="fa-solid fa-address-card" />
+                        <ContactCardIcon />
                       </span>
                       <strong>{lead.phone || lead.email || "Sem contato"}</strong>
                     </div>
                     <div className="card-meta-row">
                       <span aria-label="Valor" className="card-meta-icon" role="img" title="Valor">
-                        <i aria-hidden="true" className="fa-solid fa-sack-dollar" />
+                        <MoneyBagIcon />
                       </span>
                       <strong>{formatCurrency(lead.estimated_value)}</strong>
                     </div>
