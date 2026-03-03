@@ -57,7 +57,7 @@ export function KanbanBoard({
                 stage.deals.map((deal) => (
                   <article
                     key={deal.id}
-                    className={`deal-card ${selectedDealId === deal.id ? "is-selected" : ""}`}
+                    className={`deal-card deal-card--${stage.kind} ${selectedDealId === deal.id ? "is-selected" : ""}`}
                     draggable
                     onClick={() => onSelectDeal(deal.id)}
                     onDragEnd={onDealDragEnd}

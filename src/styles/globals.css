@@ -919,6 +919,28 @@ textarea {
   background: rgba(150, 1, 0, 0.04);
 }
 
+.deal-card--won {
+  border-color: rgba(44, 139, 87, 0.72);
+  background: #2C8B57;
+}
+
+.deal-card--lost {
+  border-color: rgba(168, 74, 68, 0.74);
+  background: #A84A44;
+}
+
+.deal-card--won.is-selected {
+  border-color: rgba(255, 255, 255, 0.72);
+  background: #2C8B57;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.18), var(--shadow-soft);
+}
+
+.deal-card--lost.is-selected {
+  border-color: rgba(255, 255, 255, 0.72);
+  background: #A84A44;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.16), var(--shadow-soft);
+}
+
 .deal-card__delete {
   position: absolute;
   top: 10px;
@@ -960,6 +982,30 @@ textarea {
   cursor: wait;
   opacity: 1;
   transform: translateY(0);
+}
+
+.deal-card--won .deal-card__meta,
+.deal-card--won .deal-card strong,
+.deal-card--won .card-meta-icon,
+.deal-card--lost .deal-card__meta,
+.deal-card--lost .deal-card strong,
+.deal-card--lost .card-meta-icon {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.deal-card--won .deal-card__delete,
+.deal-card--lost .deal-card__delete {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.deal-card--won .deal-card__delete:hover:not(:disabled),
+.deal-card--won .deal-card__delete:focus-visible:not(:disabled),
+.deal-card--lost .deal-card__delete:hover:not(:disabled),
+.deal-card--lost .deal-card__delete:focus-visible:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.22);
 }
 
 .deal-card__header,
