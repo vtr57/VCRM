@@ -307,6 +307,7 @@ textarea {
 .kanban-column--won .kanban-column__header p,
 .kanban-column--won .kanban-column__total,
 .kanban-column--won .kanban-empty,
+.kanban-column--won .kanban-empty p,
 .kanban-column--won .deal-card__meta,
 .kanban-column--won .deal-card strong,
 .kanban-column--won .card-meta-icon,
@@ -314,6 +315,7 @@ textarea {
 .kanban-column--lost .kanban-column__header p,
 .kanban-column--lost .kanban-column__total,
 .kanban-column--lost .kanban-empty,
+.kanban-column--lost .kanban-empty p,
 .kanban-column--lost .deal-card__meta,
 .kanban-column--lost .deal-card strong,
 .kanban-column--lost .card-meta-icon {
