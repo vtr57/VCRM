@@ -294,19 +294,29 @@ textarea {
 .kanban-column--won {
   background: #2C8B57;
   border-color: rgba(44, 139, 87, 0.65);
+  color: rgba(255, 255, 255, 0.96);
 }
 
 .kanban-column--lost {
   background: #A84A44;
   border-color: rgba(168, 74, 68, 0.68);
+  color: rgba(255, 255, 255, 0.96);
 }
 
 .kanban-column--won .kanban-column__header h2,
 .kanban-column--won .kanban-column__header p,
 .kanban-column--won .kanban-column__total,
+.kanban-column--won .kanban-empty,
+.kanban-column--won .deal-card__meta,
+.kanban-column--won .deal-card strong,
+.kanban-column--won .card-meta-icon,
 .kanban-column--lost .kanban-column__header h2,
 .kanban-column--lost .kanban-column__header p,
-.kanban-column--lost .kanban-column__total {
+.kanban-column--lost .kanban-column__total,
+.kanban-column--lost .kanban-empty,
+.kanban-column--lost .deal-card__meta,
+.kanban-column--lost .deal-card strong,
+.kanban-column--lost .card-meta-icon {
   color: rgba(255, 255, 255, 0.96);
 }
 
