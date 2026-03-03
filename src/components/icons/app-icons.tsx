@@ -47,3 +47,11 @@ export function MoneyBagIcon(props: IconProps) {
     </BaseIcon>
   );
 }
+
+export function TrashIcon(props: IconProps) {
+  return (
+    <BaseIcon {...props}>
+      <path d="M9 3a1 1 0 0 0-.95.68L7.28 6H5a1 1 0 0 0 0 2h1v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8h1a1 1 0 1 0 0-2h-2.28l-.77-2.32A1 1 0 0 0 15 3Zm.72 3 .34-1h3.88l.34 1ZM8 8h8v10H8Zm2 2a1 1 0 0 0-1 1v5a1 1 0 1 0 2 0v-5a1 1 0 0 0-1-1Zm4 0a1 1 0 0 0-1 1v5a1 1 0 1 0 2 0v-5a1 1 0 0 0-1-1Z" />
+    </BaseIcon>
+  );
+}

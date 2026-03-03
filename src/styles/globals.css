@@ -853,6 +853,7 @@ textarea {
 }
 
 .deal-card {
+  position: relative;
   display: grid;
   gap: 12px;
   width: 100%;
@@ -868,6 +869,49 @@ textarea {
 .deal-card.is-selected {
   border-color: rgba(150, 1, 0, 0.24);
   background: rgba(150, 1, 0, 0.04);
+}
+
+.deal-card__delete {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(150, 1, 0, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--danger);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: 160ms ease;
+}
+
+.deal-card__delete svg {
+  width: 15px;
+  height: 15px;
+}
+
+.deal-card:hover .deal-card__delete,
+.deal-card:focus-within .deal-card__delete,
+.deal-card__delete:focus-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.deal-card__delete:hover:not(:disabled),
+.deal-card__delete:focus-visible:not(:disabled) {
+  border-color: rgba(150, 1, 0, 0.24);
+  background: rgba(150, 1, 0, 0.08);
+}
+
+.deal-card__delete:disabled {
+  cursor: wait;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .deal-card__header,

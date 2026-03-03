@@ -54,7 +54,7 @@ export function PeriodFilter({ value, onApply }: PeriodFilterProps) {
           />
         </label>
         <label className="form-field">
-          <span>Ate</span>
+          <span>Até</span>
           <input
             type="date"
             value={draft.to}

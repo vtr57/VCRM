@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-import { createDeal, getPipelineBoard, moveDeal } from "@/api/pipeline";
+import { createDeal, deleteDeal, getPipelineBoard, moveDeal } from "@/api/pipeline";
 import { FullscreenState } from "@/components/feedback/fullscreen-state";
 import { KanbanBoard } from "@/features/pipeline/components/kanban-board";
 import { PipelineLeadCreateCard } from "@/features/pipeline/components/pipeline-lead-create-card";
@@ -56,12 +56,28 @@ function moveBoardDeal(board: PipelineBoard, draggingDeal: DraggingDealState, ta
   };
 }
 
+function removeBoardDeal(board: PipelineBoard, dealId: string) {
+  return {
+    ...board,
+    stages: board.stages.map((stage) => ({
+      ...stage,
+      deals: stage.deals
+        .filter((deal) => deal.id !== dealId)
+        .map((deal, index) => ({
+          ...deal,
+          position: index,
+        })),
+    })),
+  };
+}
+
 export function PipelinePage() {
   const queryClient = useQueryClient();
   const [boardState, setBoardState] = useState<PipelineBoard | null>(null);
   const [draggingItem, setDraggingItem] = useState<DraggingItemState | null>(null);
   const [selectedDealId, setSelectedDealId] = useState<string | null>(null);
   const [pendingLeadId, setPendingLeadId] = useState<string | null>(null);
+  const [deletingDealId, setDeletingDealId] = useState<string | null>(null);
   const [moveError, setMoveError] = useState("");
 
   const boardQuery = useQuery({
@@ -138,6 +154,28 @@ export function PipelinePage() {
     },
   });
 
+  const deleteDealMutation = useMutation({
+    mutationFn: deleteDeal,
+    onMutate: (dealId) => {
+      setDeletingDealId(dealId);
+      setMoveError("");
+    },
+    onSuccess: async (_, dealId) => {
+      setDeletingDealId(null);
+      if (selectedDealId === dealId) {
+        setSelectedDealId(null);
+      }
+      await queryClient.invalidateQueries({ queryKey: ["pipeline-board"] });
+      await queryClient.invalidateQueries({ queryKey: ["deal", dealId] });
+      await queryClient.invalidateQueries({ queryKey: ["deal-timeline", dealId] });
+      await queryClient.invalidateQueries({ queryKey: ["analytics-dashboard"] });
+    },
+    onError: (error) => {
+      setDeletingDealId(null);
+      setMoveError(error instanceof Error ? error.message : "Nao foi possivel excluir o deal.");
+    },
+  });
+
   function createLeadDeal(lead: LeadListItem, stage: BoardStage) {
     let lostReason = "";
 
@@ -200,6 +238,25 @@ export function PipelinePage() {
     });
   }
 
+  function handleDeleteDeal(deal: BoardDeal) {
+    if (!boardState || deleteDealMutation.isPending) {
+      return;
+    }
+
+    const confirmed = window.confirm(`Excluir apenas o deal de ${deal.lead.full_name}? O contato sera mantido.`);
+    if (!confirmed) {
+      return;
+    }
+
+    const previousBoard = boardState;
+    setBoardState(removeBoardDeal(boardState, deal.id));
+    deleteDealMutation.mutate(deal.id, {
+      onError: () => {
+        setBoardState(previousBoard);
+      },
+    });
+  }
+
   if (boardQuery.isLoading && !boardState) {
     return (
       <FullscreenState
@@ -234,10 +291,12 @@ export function PipelinePage() {
       {moveError ? <p className="form-error">{moveError}</p> : null}
 
       <KanbanBoard
+        deletingDealId={deletingDealId}
         stages={boardState.stages}
         draggingItemId={
           draggingItem?.type === "deal" ? draggingItem.deal.id : draggingItem?.type === "lead" ? draggingItem.lead.id : null
         }
+        onDeleteDeal={handleDeleteDeal}
         onDealDragStart={(deal, stageId) => {
           setMoveError("");
           setDraggingItem({ type: "deal", deal, fromStageId: stageId });

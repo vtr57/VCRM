@@ -1,10 +1,12 @@
-import { BuildingIcon, ContactCardIcon, MoneyBagIcon, UserIcon } from "@/components/icons/app-icons";
+import { BuildingIcon, ContactCardIcon, MoneyBagIcon, TrashIcon, UserIcon } from "@/components/icons/app-icons";
 import { formatCurrency } from "@/lib/formatters";
 import type { BoardDeal, BoardStage } from "@/types/pipeline";
 
 interface KanbanBoardProps {
+  deletingDealId: string | null;
   stages: BoardStage[];
   draggingItemId: string | null;
+  onDeleteDeal: (deal: BoardDeal) => void;
   onDealDragStart: (deal: BoardDeal, stageId: string) => void;
   onDealDragEnd: () => void;
   onStageDrop: (stage: BoardStage) => void;
@@ -13,8 +15,10 @@ interface KanbanBoardProps {
 }
 
 export function KanbanBoard({
+  deletingDealId,
   stages,
   draggingItemId,
+  onDeleteDeal,
   onDealDragStart,
   onDealDragEnd,
   onStageDrop,
@@ -61,6 +65,23 @@ export function KanbanBoard({
                   role="button"
                   tabIndex={0}
                 >
+                  <button
+                    aria-label={`Excluir deal de ${deal.lead.full_name}`}
+                    className="deal-card__delete"
+                    disabled={deletingDealId === deal.id}
+                    draggable={false}
+                    type="button"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      onDeleteDeal(deal);
+                    }}
+                    onMouseDown={(event) => {
+                      event.stopPropagation();
+                    }}
+                  >
+                    <TrashIcon />
+                  </button>
                   <div className="deal-card__meta card-meta-row">
                     <span aria-label="Nome" className="card-meta-icon" role="img" title="Nome">
                       <UserIcon />

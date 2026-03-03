@@ -20,6 +20,12 @@ export function getDealById(dealId: string) {
   return apiFetch<DealDetail>(`/deals/${dealId}/`);
 }
 
+export function deleteDeal(dealId: string) {
+  return apiFetch<void>(`/deals/${dealId}/`, {
+    method: "DELETE",
+  });
+}
+
 export function createDeal(payload: CreateDealPayload) {
   return apiFetch<DealDetail>("/deals/", {
     method: "POST",
