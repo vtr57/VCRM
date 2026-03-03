@@ -3,17 +3,19 @@ import { useId, useMemo, useState } from "react";
 
 import { importLeadsCsv } from "@/api/leads";
 
-const leadImportFields = [
-  "organization",
-  "full_name",
-  "email",
-  "phone",
-  "job_title",
-  "source",
-  "estimated_value",
+const leadImportColumns = [
+  { key: "full_name", label: "Nome" },
+  { key: "email", label: "Email" },
+  { key: "phone", label: "Telefone" },
+  { key: "company_name", label: "Empresa" },
+  { key: "job_title", label: "Cargo" },
+  { key: "source_alias", label: "Fonte" },
+  { key: "temperature", label: "Temperatura" },
+  { key: "estimated_value", label: "Valor estimado" },
+  { key: "source", label: "Origem" },
 ] as const;
 
-type LeadImportField = (typeof leadImportFields)[number];
+type LeadImportField = (typeof leadImportColumns)[number]["key"];
 type MappingState = Record<LeadImportField, string>;
 
 interface ImportLeadsModalProps {
@@ -89,10 +91,18 @@ function parseCsvContent(content: string): CsvParseResult {
   return { headers, rows };
 }
 
+function normalizeHeader(value: string) {
+  return value.trim().toLowerCase();
+}
+
 function buildDefaultMapping(headers: string[]) {
-  return leadImportFields.reduce<MappingState>((accumulator, field) => {
-    const matchingHeader = headers.find((header) => header === field) ?? "";
-    accumulator[field] = matchingHeader;
+  return leadImportColumns.reduce<MappingState>((accumulator, column) => {
+    const matchingHeader =
+      headers.find((header) => {
+        const normalizedHeader = normalizeHeader(header);
+        return normalizedHeader === normalizeHeader(column.label) || normalizedHeader === normalizeHeader(column.key);
+      }) ?? "";
+    accumulator[column.key] = matchingHeader;
     return accumulator;
   }, {} as MappingState);
 }
@@ -119,7 +129,7 @@ export function ImportLeadsModal({ onClose, onImported }: ImportLeadsModalProps)
   );
 
   function handleDownloadTemplate() {
-    const templateContent = `${leadImportFields.join(",")}\n`;
+    const templateContent = `${leadImportColumns.map((column) => column.label).join(",")}\n`;
     const blob = new Blob([templateContent], { type: "text/csv;charset=utf-8;" });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -219,18 +229,18 @@ export function ImportLeadsModal({ onClose, onImported }: ImportLeadsModalProps)
           <div className="import-fields">
               <div className="field-label-row">
                 <span className="form-label">Campos importados do lead</span>
-                <span className="field-hint">{mappedCount}/{leadImportFields.length} mapeados</span>
+                <span className="field-hint">{mappedCount}/{leadImportColumns.length} mapeados</span>
               </div>
             <div className="import-grid">
-              {leadImportFields.map((field) => (
-                <div className="import-grid__row" key={field}>
-                  <span className="import-grid__field">{field}</span>
+              {leadImportColumns.map((column) => (
+                <div className="import-grid__row" key={column.key}>
+                  <span className="import-grid__field">{column.label}</span>
                   <select
-                    value={mapping[field]}
+                    value={mapping[column.key]}
                     onChange={(event) =>
                       setMapping((current) => ({
                         ...current,
-                        [field]: event.target.value,
+                        [column.key]: event.target.value,
                       }))
                     }
                   >

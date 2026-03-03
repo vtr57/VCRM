@@ -253,7 +253,6 @@ export function LeadsPage() {
               <LeadCreateCard
                 lead={editingLead}
                 sources={sourcesQuery.data?.results ?? []}
-                tags={tagsQuery.data?.results ?? []}
                 onClose={() => {
                   setIsCreateModalOpen(false);
                   setEditingLead(null);

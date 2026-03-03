@@ -3,11 +3,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 import { createLead, type LeadWritePayload, updateLead } from "@/api/leads";
-import type { LeadDetail, LeadSource, LeadTag, LeadTemperature } from "@/types/leads";
+import type { LeadDetail, LeadSource, LeadTemperature } from "@/types/leads";
 
 interface LeadCreateCardProps {
   sources: LeadSource[];
-  tags: LeadTag[];
   lead?: LeadDetail | null;
   onClose?: () => void;
 }
@@ -20,9 +19,7 @@ interface LeadCreateState {
   job_title: string;
   temperature: LeadTemperature;
   estimated_value: string;
-  notes_summary: string;
   source_id: string;
-  tag_ids: string[];
 }
 
 const initialState: LeadCreateState = {
@@ -33,9 +30,7 @@ const initialState: LeadCreateState = {
   job_title: "",
   temperature: "warm",
   estimated_value: "",
-  notes_summary: "",
   source_id: "",
-  tag_ids: [],
 };
 
 function getFormState(lead?: LeadDetail | null): LeadCreateState {
@@ -51,13 +46,11 @@ function getFormState(lead?: LeadDetail | null): LeadCreateState {
     job_title: lead.job_title || "",
     temperature: lead.temperature,
     estimated_value: lead.estimated_value || "",
-    notes_summary: lead.notes_summary || "",
     source_id: lead.source?.id || "",
-    tag_ids: lead.tags.map((tag) => tag.id),
   };
 }
 
-export function LeadCreateCard({ sources, tags, lead, onClose }: LeadCreateCardProps) {
+export function LeadCreateCard({ sources, lead, onClose }: LeadCreateCardProps) {
   const queryClient = useQueryClient();
   const [formState, setFormState] = useState<LeadCreateState>(() => getFormState(lead));
   const [errorMessage, setErrorMessage] = useState("");
@@ -91,15 +84,6 @@ export function LeadCreateCard({ sources, tags, lead, onClose }: LeadCreateCardP
     },
   });
 
-  function handleTagToggle(tagId: string) {
-    setFormState((current) => ({
-      ...current,
-      tag_ids: current.tag_ids.includes(tagId)
-        ? current.tag_ids.filter((value) => value !== tagId)
-        : [...current.tag_ids, tagId],
-    }));
-  }
-
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setErrorMessage("");
@@ -112,9 +96,7 @@ export function LeadCreateCard({ sources, tags, lead, onClose }: LeadCreateCardP
       job_title: formState.job_title || undefined,
       temperature: formState.temperature,
       estimated_value: formState.estimated_value || undefined,
-      notes_summary: formState.notes_summary || undefined,
       source_id: formState.source_id || undefined,
-      tag_ids: formState.tag_ids.length ? formState.tag_ids : undefined,
     };
 
     leadMutation.mutate(payload);
@@ -233,35 +215,6 @@ export function LeadCreateCard({ sources, tags, lead, onClose }: LeadCreateCardP
               }
             />
           </label>
-        </div>
-        <label className="form-field">
-          <span>Resumo</span>
-          <textarea
-            rows={3}
-            placeholder="Contexto, necessidade, canal de entrada ou proximo passo."
-            value={formState.notes_summary}
-            onChange={(event) =>
-              setFormState((current) => ({ ...current, notes_summary: event.target.value }))
-            }
-          />
-        </label>
-        <div className="stack stack--sm">
-          <div className="field-label-row">
-            <span className="form-label">Tags</span>
-          </div>
-          <div className="chip-list">
-            {tags.map((tag) => (
-              <button
-                key={tag.id}
-                className={`chip ${formState.tag_ids.includes(tag.id) ? "is-active" : ""}`}
-                type="button"
-                onClick={() => handleTagToggle(tag.id)}
-              >
-                <span className="chip__swatch" style={{ backgroundColor: tag.color }} aria-hidden="true" />
-                {tag.name}
-              </button>
-            ))}
-          </div>
         </div>
         {errorMessage ? <p className="form-error">{errorMessage}</p> : null}
         <div className="form-actions">
