@@ -9,10 +9,9 @@ const leadImportColumns = [
   { key: "phone", label: "Telefone" },
   { key: "company_name", label: "Empresa" },
   { key: "job_title", label: "Cargo" },
-  { key: "source_alias", label: "Fonte" },
+  { key: "source", label: "Origem" },
   { key: "temperature", label: "Temperatura" },
   { key: "estimated_value", label: "Valor estimado" },
-  { key: "source", label: "Origem" },
 ] as const;
 
 type LeadImportField = (typeof leadImportColumns)[number]["key"];
