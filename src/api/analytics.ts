@@ -1,10 +1,5 @@
 import { apiFetch } from "@/api/client";
-import type {
-  DashboardAnalytics,
-  OwnerConversionReport,
-  SourceProfitabilityReport,
-  StageConversionReport,
-} from "@/types/analytics";
+import type { DashboardAnalytics } from "@/types/analytics";
 
 export interface AnalyticsFilters {
   from?: string;
@@ -26,22 +21,4 @@ function buildQuery(params: AnalyticsFilters) {
 
 export function getDashboardAnalytics(filters: AnalyticsFilters) {
   return apiFetch<DashboardAnalytics>(`/analytics/dashboard/${buildQuery(filters)}`);
-}
-
-export function getStageConversionReport(filters: AnalyticsFilters) {
-  return apiFetch<StageConversionReport>(
-    `/analytics/reports/conversion-by-stage/${buildQuery(filters)}`,
-  );
-}
-
-export function getOwnerConversionReport(filters: AnalyticsFilters) {
-  return apiFetch<OwnerConversionReport>(
-    `/analytics/reports/conversion-by-owner/${buildQuery(filters)}`,
-  );
-}
-
-export function getSourceProfitabilityReport(filters: AnalyticsFilters) {
-  return apiFetch<SourceProfitabilityReport>(
-    `/analytics/reports/source-profitability/${buildQuery(filters)}`,
-  );
 }
