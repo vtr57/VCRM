@@ -226,7 +226,7 @@ export function LeadCreateCard({ sources, tags, lead, onClose }: LeadCreateCardP
             <span>Valor estimado</span>
             <input
               inputMode="decimal"
-              placeholder="0.00"
+              placeholder="0,00"
               value={formState.estimated_value}
               onChange={(event) =>
                 setFormState((current) => ({ ...current, estimated_value: event.target.value }))
