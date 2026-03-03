@@ -291,6 +291,31 @@ textarea {
   background: rgba(255, 255, 255, 0.94);
 }
 
+.kanban-column--won {
+  background: #2C8B57;
+  border-color: rgba(44, 139, 87, 0.65);
+}
+
+.kanban-column--lost {
+  background: #A84A44;
+  border-color: rgba(168, 74, 68, 0.68);
+}
+
+.kanban-column--won .kanban-column__header h2,
+.kanban-column--won .kanban-column__header p,
+.kanban-column--won .kanban-column__total,
+.kanban-column--lost .kanban-column__header h2,
+.kanban-column--lost .kanban-column__header p,
+.kanban-column--lost .kanban-column__total {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.kanban-column--won .badge--muted,
+.kanban-column--lost .badge--muted {
+  background: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.96);
+}
+
 .kanban-column.is-drop-enabled {
   border-style: dashed;
 }

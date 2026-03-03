@@ -32,7 +32,7 @@ export function KanbanBoard({
 
         return (
           <section
-            className={`kanban-column ${draggingItemId ? "is-drop-enabled" : ""}`}
+            className={`kanban-column kanban-column--${stage.kind} ${draggingItemId ? "is-drop-enabled" : ""}`}
             key={stage.id}
             onDragOver={(event) => event.preventDefault()}
             onDrop={() => onStageDrop(stage)}
