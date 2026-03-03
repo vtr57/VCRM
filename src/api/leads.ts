@@ -55,6 +55,13 @@ export function updateLead(leadId: string, payload: LeadWritePayload) {
   });
 }
 
+export function deleteSelectedLeads(leadIds: string[]) {
+  return apiFetch<{ deleted_count: number }>("/leads/bulk_delete/", {
+    method: "POST",
+    body: JSON.stringify({ lead_ids: leadIds }),
+  });
+}
+
 export function getLeadById(leadId: string) {
   return apiFetch<LeadDetail>(`/leads/${leadId}/`);
 }

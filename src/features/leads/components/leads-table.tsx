@@ -6,10 +6,15 @@ import type { LeadListItem } from "@/types/leads";
 interface LeadsTableProps {
   leads: LeadListItem[];
   currentPage: number;
+  isDeleting: boolean;
+  selectedLeadIds: string[];
   totalPages: number;
   totalItems: number;
+  onBulkDelete: () => void;
   onEditLead: (lead: LeadListItem) => void;
   onPageChange: (page: number) => void;
+  onSelectAllLeads: (checked: boolean) => void;
+  onSelectLead: (leadId: string, checked: boolean) => void;
 }
 
 const statusLabels: Record<LeadListItem["status"], string> = {
@@ -30,11 +35,19 @@ const temperatureLabels: Record<LeadListItem["temperature"], string> = {
 export function LeadsTable({
   leads,
   currentPage,
+  isDeleting,
+  selectedLeadIds,
   totalPages,
   totalItems,
+  onBulkDelete,
   onEditLead,
   onPageChange,
+  onSelectAllLeads,
+  onSelectLead,
 }: LeadsTableProps) {
+  const selectedCount = selectedLeadIds.length;
+  const allVisibleSelected = leads.length > 0 && leads.every((lead) => selectedLeadIds.includes(lead.id));
+
   return (
     <article className="card">
       <div className="section-heading">
@@ -42,7 +55,17 @@ export function LeadsTable({
           <p className="section-eyebrow">Carteira</p>
           <h2>Leads ativos</h2>
         </div>
-        <span className="badge badge--muted">{totalItems} registros</span>
+        <div className="toolbar-actions">
+          <span className="badge badge--muted">{totalItems} registros</span>
+          <button
+            className="ghost-button ghost-button--danger"
+            disabled={selectedCount === 0 || isDeleting}
+            type="button"
+            onClick={onBulkDelete}
+          >
+            {isDeleting ? "Excluindo..." : `Excluir selecionados${selectedCount ? ` (${selectedCount})` : ""}`}
+          </button>
+        </div>
       </div>
       {leads.length === 0 ? (
         <div className="empty-state empty-state--inline">
@@ -55,6 +78,14 @@ export function LeadsTable({
             <table className="data-table">
               <thead>
                 <tr>
+                  <th className="table-checkbox-cell">
+                    <input
+                      aria-label="Selecionar todos os leads da pagina"
+                      checked={allVisibleSelected}
+                      type="checkbox"
+                      onChange={(event) => onSelectAllLeads(event.target.checked)}
+                    />
+                  </th>
                   <th>Lead</th>
                   <th>Status</th>
                   <th>Origem</th>
@@ -67,6 +98,14 @@ export function LeadsTable({
               <tbody>
                 {leads.map((lead) => (
                   <tr className="lead-row" key={lead.id}>
+                    <td className="table-checkbox-cell">
+                      <input
+                        aria-label={`Selecionar ${lead.full_name}`}
+                        checked={selectedLeadIds.includes(lead.id)}
+                        type="checkbox"
+                        onChange={(event) => onSelectLead(lead.id, event.target.checked)}
+                      />
+                    </td>
                     <td>
                       <div className="table-primary">
                         <strong>{lead.full_name}</strong>
