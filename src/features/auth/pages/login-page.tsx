@@ -10,8 +10,8 @@ import type { AuthSessionResponse } from "@/types/auth";
 export function LoginPage() {
   const navigate = useNavigate();
   const { setSession } = useSession();
-  const [email, setEmail] = useState("owner@example.com");
-  const [password, setPassword] = useState("StrongPass123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const loginMutation = useMutation<AuthSessionResponse, Error, LoginPayload>({
     mutationFn: login,
