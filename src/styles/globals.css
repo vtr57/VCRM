@@ -724,22 +724,6 @@ textarea {
   margin-bottom: 0;
 }
 
-.link-button {
-  border: 0;
-  padding: 0;
-  margin: 0;
-  color: var(--accent-strong);
-  background: transparent;
-  cursor: pointer;
-  font-weight: 600;
-  text-align: left;
-}
-
-.link-button:hover,
-.link-button:focus-visible {
-  text-decoration: underline;
-}
-
 .table-actions {
   display: flex;
   align-items: center;
@@ -771,8 +755,6 @@ textarea {
   background: rgba(255, 255, 255, 0.72);
   color: var(--accent-strong);
   cursor: pointer;
-  opacity: 0;
-  transform: translateX(6px);
   transition: 160ms ease;
 }
 
@@ -781,11 +763,10 @@ textarea {
   height: 16px;
 }
 
-.lead-row:hover .table-actions__edit,
-.lead-row:focus-within .table-actions__edit,
+.table-actions__edit:hover,
 .table-actions__edit:focus-visible {
-  opacity: 1;
-  transform: translateX(0);
+  border-color: rgba(150, 1, 0, 0.28);
+  background: rgba(150, 1, 0, 0.08);
 }
 
 .pagination-bar {

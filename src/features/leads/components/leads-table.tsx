@@ -78,6 +78,7 @@ export function LeadsTable({
                   <th>Valor</th>
                   <th>Owner</th>
                   <th>Telefone</th>
+                  <th>Acoes</th>
                 </tr>
               </thead>
               <tbody>
@@ -98,9 +99,6 @@ export function LeadsTable({
                             </Link>
                           </strong>
                           <span>{lead.company_name || lead.email || "Contato sem empresa"}</span>
-                          <button className="link-button" type="button" onClick={() => onEditLead(lead)}>
-                            Editar
-                          </button>
                         </div>
                       </div>
                     </td>
@@ -108,6 +106,21 @@ export function LeadsTable({
                     <td>{formatCurrency(lead.estimated_value)}</td>
                     <td>{lead.assigned_to?.full_name || lead.created_by.full_name || "Sem owner"}</td>
                     <td>{lead.phone || "Nao informado"}</td>
+                    <td className="table-actions">
+                      <button
+                        aria-label={`Editar ${lead.full_name}`}
+                        className="table-actions__edit"
+                        type="button"
+                        onClick={() => onEditLead(lead)}
+                      >
+                        <svg aria-hidden="true" viewBox="0 0 24 24">
+                          <path
+                            d="M4 20h4l10-10-4-4L4 16v4zm13.7-11.3 1.6-1.6a1 1 0 0 0 0-1.4l-1-1a1 1 0 0 0-1.4 0l-1.6 1.6 2.4 2.4z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
