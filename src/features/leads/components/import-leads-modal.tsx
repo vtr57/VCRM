@@ -1,5 +1,5 @@
 import type { FormEvent } from "react";
-import { useId, useMemo, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 
 import { importLeadsCsv } from "@/api/leads";
 
@@ -108,6 +108,7 @@ function buildDefaultMapping(headers: string[]) {
 
 export function ImportLeadsModal({ onClose, onImported }: ImportLeadsModalProps) {
   const fileInputId = useId();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [csvHeaders, setCsvHeaders] = useState<string[]>([]);
   const [previewRows, setPreviewRows] = useState<string[][]>([]);
@@ -126,6 +127,16 @@ export function ImportLeadsModal({ onClose, onImported }: ImportLeadsModalProps)
     () => csvHeaders.slice(0, Math.min(csvHeaders.length, 6)),
     [csvHeaders],
   );
+
+  function clearSelectedFile() {
+    setFile(null);
+    setCsvHeaders([]);
+    setPreviewRows([]);
+    setMapping(buildDefaultMapping([]));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }
 
   function handleDownloadTemplate() {
     const templateContent = `${leadImportColumns.map((column) => column.label).join(",")}\n`;
@@ -147,9 +158,7 @@ export function ImportLeadsModal({ onClose, onImported }: ImportLeadsModalProps)
     setImportResult(null);
 
     if (!nextFile) {
-      setCsvHeaders([]);
-      setPreviewRows([]);
-      setMapping(buildDefaultMapping([]));
+      clearSelectedFile();
       return;
     }
 
@@ -174,11 +183,19 @@ export function ImportLeadsModal({ onClose, onImported }: ImportLeadsModalProps)
       setResultMessage("");
       setImportResult(null);
       const result = await importLeadsCsv(file, mapping);
-      await onImported();
       setImportResult(result);
-      setResultMessage(
-        `Importacao concluida: ${result.imported_count} leads importados e ${result.error_count} erros.`,
-      );
+      if (result.error_count > 0) {
+        setResultMessage(
+          `Importacao cancelada: ${result.error_count} erros encontrados. Nenhum lead foi adicionado.`,
+        );
+        return;
+      }
+
+      if (result.imported_count > 0) {
+        await onImported();
+      }
+      clearSelectedFile();
+      setResultMessage(`Importacao concluida: ${result.imported_count} leads importados e 0 erros.`);
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Nao foi possivel importar o CSV.");
     } finally {
@@ -210,6 +227,7 @@ export function ImportLeadsModal({ onClose, onImported }: ImportLeadsModalProps)
                 accept=".csv,text/csv"
                 className="import-file-input"
                 id={fileInputId}
+                ref={fileInputRef}
                 type="file"
                 onChange={(event) => void handleFileChange(event.target.files?.[0] ?? null)}
               />
