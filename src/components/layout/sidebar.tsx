@@ -3,11 +3,21 @@ import { NavLink } from "react-router-dom";
 import { useSession } from "@/features/auth/hooks/use-session";
 import { navigationItems } from "@/lib/navigation";
 
-export function Sidebar() {
+interface SidebarProps {
+  isMobileLayout: boolean;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export function Sidebar({ isMobileLayout, isOpen, onClose }: SidebarProps) {
   const { organization } = useSession();
 
   return (
-    <aside className="sidebar">
+    <aside
+      aria-hidden={isMobileLayout && !isOpen}
+      className={`sidebar${isOpen ? " is-open" : ""}`}
+      id="app-sidebar"
+    >
       <div className="sidebar__brand">
         <img className="sidebar__logo" src="/VCRM.png" alt="VCRM" />
         <h1 className="sidebar__title">VCRM</h1>
@@ -19,6 +29,7 @@ export function Sidebar() {
             key={item.to}
             to={item.to}
             className={({ isActive }) => `sidebar__link${isActive ? " is-active" : ""}`}
+            onClick={isMobileLayout ? onClose : undefined}
           >
             {item.label}
           </NavLink>

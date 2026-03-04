@@ -3,7 +3,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSession } from "@/features/auth/hooks/use-session";
 import { navigationItems } from "@/lib/navigation";
 
-export function Topbar() {
+interface TopbarProps {
+  isMobileLayout: boolean;
+  isSidebarOpen: boolean;
+  onMenuToggle: () => void;
+}
+
+export function Topbar({ isMobileLayout, isSidebarOpen, onMenuToggle }: TopbarProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, organization, clearSession } = useSession();
@@ -18,9 +24,25 @@ export function Topbar() {
 
   return (
     <header className="topbar">
-      <div>
-        <p className="topbar__eyebrow">{currentItem.eyebrow}</p>
-        <h2 className="topbar__title">{currentItem.title}</h2>
+      <div className="topbar__heading">
+        {isMobileLayout ? (
+          <button
+            aria-controls="app-sidebar"
+            aria-expanded={isSidebarOpen}
+            aria-label={isSidebarOpen ? "Fechar menu" : "Abrir menu"}
+            className="topbar__menu-button"
+            type="button"
+            onClick={onMenuToggle}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        ) : null}
+        <div>
+          <p className="topbar__eyebrow">{currentItem.eyebrow}</p>
+          <h2 className="topbar__title">{currentItem.title}</h2>
+        </div>
       </div>
       <div className="topbar__actions">
         <div className="topbar__identity">
