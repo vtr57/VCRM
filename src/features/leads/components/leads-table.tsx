@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import { formatCurrency, formatDateTime } from "@/lib/formatters";
+import { formatCurrency } from "@/lib/formatters";
 import type { LeadListItem } from "@/types/leads";
 
 interface LeadsTableProps {
@@ -16,21 +16,6 @@ interface LeadsTableProps {
   onSelectAllLeads: (checked: boolean) => void;
   onSelectLead: (leadId: string, checked: boolean) => void;
 }
-
-const statusLabels: Record<LeadListItem["status"], string> = {
-  new: "Novo",
-  contacted: "Contatado",
-  qualified: "Qualificado",
-  proposal: "Proposta",
-  won: "Ganho",
-  lost: "Perdido",
-};
-
-const temperatureLabels: Record<LeadListItem["temperature"], string> = {
-  cold: "Frio",
-  warm: "Morno",
-  hot: "Quente",
-};
 
 export function LeadsTable({
   leads,
@@ -49,7 +34,7 @@ export function LeadsTable({
   const allVisibleSelected = leads.length > 0 && leads.every((lead) => selectedLeadIds.includes(lead.id));
 
   return (
-    <article className="card">
+    <article className="card leads-table-card">
       <div className="section-heading">
         <div>
           <p className="section-eyebrow">Carteira</p>
@@ -78,79 +63,51 @@ export function LeadsTable({
             <table className="data-table">
               <thead>
                 <tr>
-                  <th className="table-checkbox-cell">
-                    <input
-                      aria-label="Selecionar todos os leads da pagina"
-                      checked={allVisibleSelected}
-                      type="checkbox"
-                      onChange={(event) => onSelectAllLeads(event.target.checked)}
-                    />
+                  <th>
+                    <span className="lead-column-header">
+                      <input
+                        aria-label="Selecionar todos os leads da pagina"
+                        checked={allVisibleSelected}
+                        type="checkbox"
+                        onChange={(event) => onSelectAllLeads(event.target.checked)}
+                      />
+                      <span>Lead</span>
+                    </span>
                   </th>
-                  <th>Lead</th>
-                  <th>Status</th>
                   <th>Origem</th>
                   <th>Valor</th>
-                  <th>Ultima interacao</th>
                   <th>Owner</th>
-                  <th />
+                  <th>Telefone</th>
                 </tr>
               </thead>
               <tbody>
                 {leads.map((lead) => (
                   <tr className="lead-row" key={lead.id}>
-                    <td className="table-checkbox-cell">
-                      <input
-                        aria-label={`Selecionar ${lead.full_name}`}
-                        checked={selectedLeadIds.includes(lead.id)}
-                        type="checkbox"
-                        onChange={(event) => onSelectLead(lead.id, event.target.checked)}
-                      />
-                    </td>
                     <td>
-                      <div className="table-primary">
-                        <strong>{lead.full_name}</strong>
-                        <span>{lead.company_name || lead.email || "Contato sem empresa"}</span>
-                      </div>
-                      <div className="table-tags">
-                        <span className={`badge badge--status badge--${lead.status}`}>
-                          {statusLabels[lead.status]}
-                        </span>
-                        <span className="badge badge--muted">{temperatureLabels[lead.temperature]}</span>
-                        {lead.tags.slice(0, 2).map((tag) => (
-                          <span className="badge badge--tag" key={tag.id}>
-                            <span
-                              className="badge__swatch"
-                              style={{ backgroundColor: tag.color }}
-                              aria-hidden="true"
-                            />
-                            {tag.name}
-                          </span>
-                        ))}
+                      <div className="lead-cell">
+                        <input
+                          aria-label={`Selecionar ${lead.full_name}`}
+                          checked={selectedLeadIds.includes(lead.id)}
+                          type="checkbox"
+                          onChange={(event) => onSelectLead(lead.id, event.target.checked)}
+                        />
+                        <div className="table-primary">
+                          <strong>
+                            <Link className="text-link" to={`/leads/${lead.id}`}>
+                              {lead.full_name}
+                            </Link>
+                          </strong>
+                          <span>{lead.company_name || lead.email || "Contato sem empresa"}</span>
+                          <button className="link-button" type="button" onClick={() => onEditLead(lead)}>
+                            Editar
+                          </button>
+                        </div>
                       </div>
                     </td>
-                    <td>{statusLabels[lead.status]}</td>
                     <td>{lead.source?.name ?? "Nao informado"}</td>
                     <td>{formatCurrency(lead.estimated_value)}</td>
-                    <td>{formatDateTime(lead.last_interaction_at)}</td>
                     <td>{lead.assigned_to?.full_name || lead.created_by.full_name || "Sem owner"}</td>
-                    <td className="table-actions">
-                      <button
-                        aria-label={`Editar ${lead.full_name}`}
-                        className="table-actions__edit"
-                        type="button"
-                        onClick={() => onEditLead(lead)}
-                      >
-                        <svg aria-hidden="true" viewBox="0 0 24 24">
-                          <path
-                            d="M4 20h4l10-10-4-4L4 16v4zm13.7-11.3 1.6-1.6a1 1 0 0 0 0-1.4l-1-1a1 1 0 0 0-1.4 0l-1.6 1.6 2.4 2.4z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                      </button>
-                      <Link className="text-link" to={`/leads/${lead.id}`}>
-                        Abrir lead
-                      </Link>
-                    </td>
+                    <td>{lead.phone || "Nao informado"}</td>
                   </tr>
                 ))}
               </tbody>
