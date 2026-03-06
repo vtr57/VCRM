@@ -5,6 +5,7 @@ import { ProtectedRoute } from "@/features/auth/components/protected-route";
 import { PublicRoute } from "@/features/auth/components/public-route";
 import { LoginPage } from "@/features/auth/pages/login-page";
 import { DashboardPage } from "@/features/dashboard/pages/dashboard-page";
+import { PrivacyPolicyPage } from "@/features/legal/pages/privacy-policy-page";
 import { LeadDetailPage } from "@/features/leads/pages/lead-detail-page";
 import { LeadsPage } from "@/features/leads/pages/leads-page";
 import { PipelinePage } from "@/features/pipeline/pages/pipeline-page";
@@ -20,6 +21,7 @@ export function AppRouter() {
           </PublicRoute>
         }
       />
+      <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
       <Route
         element={
           <ProtectedRoute>

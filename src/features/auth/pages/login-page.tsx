@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useMutation } from "@tanstack/react-query";
 
@@ -58,6 +58,13 @@ export function LoginPage() {
           ) : (
             <p className="form-hint">Use um usuário já cadastrado no backend para entrar.</p>
           )}
+          <p className="form-hint">
+            Politica de privacidade:{" "}
+            <Link className="text-link" to="/privacy-policy">
+              abrir documento
+            </Link>
+            .
+          </p>
 
           <button className="primary-link" type="submit" disabled={loginMutation.isPending}>
             {loginMutation.isPending ? "Entrando..." : "Entrar"}
