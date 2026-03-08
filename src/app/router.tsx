@@ -6,7 +6,6 @@ import { PublicRoute } from "@/features/auth/components/public-route";
 import { LoginPage } from "@/features/auth/pages/login-page";
 import { DashboardPage } from "@/features/dashboard/pages/dashboard-page";
 import { PrivacyPolicyPage } from "@/features/legal/pages/privacy-policy-page";
-import { LeadDetailPage } from "@/features/leads/pages/lead-detail-page";
 import { LeadsPage } from "@/features/leads/pages/leads-page";
 import { PipelinePage } from "@/features/pipeline/pages/pipeline-page";
 
@@ -32,7 +31,6 @@ export function AppRouter() {
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/leads" element={<LeadsPage />} />
-        <Route path="/leads/:leadId" element={<LeadDetailPage />} />
         <Route path="/pipeline" element={<PipelinePage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

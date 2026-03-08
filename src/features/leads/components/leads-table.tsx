@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-
 import { formatCurrency } from "@/lib/formatters";
 import type { LeadListItem } from "@/types/leads";
 
@@ -94,9 +92,9 @@ export function LeadsTable({
                         />
                         <div className="table-primary">
                           <strong>
-                            <Link className="text-link" to={`/leads/${lead.id}`}>
+                            <button className="text-link" type="button" onClick={() => onEditLead(lead)}>
                               {lead.full_name}
-                            </Link>
+                            </button>
                           </strong>
                           <span>{lead.company_name || lead.email || "Contato sem empresa"}</span>
                         </div>
