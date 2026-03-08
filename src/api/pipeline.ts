@@ -12,8 +12,13 @@ export interface CreateDealPayload {
   ownerId?: string;
 }
 
-export function getPipelineBoard() {
-  return apiFetch<PipelineBoard>("/pipelines/board/");
+export function getPipelineBoard(memberUserId?: string) {
+  const searchParams = new URLSearchParams();
+  if (memberUserId) {
+    searchParams.set("member_user_id", memberUserId);
+  }
+  const query = searchParams.toString();
+  return apiFetch<PipelineBoard>(`/pipelines/board/${query ? `?${query}` : ""}`);
 }
 
 export function getDealById(dealId: string) {

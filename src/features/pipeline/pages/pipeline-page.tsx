@@ -1,8 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
+import { getTeamMembers } from "@/api/auth";
 import { createDeal, deleteDeal, getPipelineBoard, moveDeal } from "@/api/pipeline";
 import { FullscreenState } from "@/components/feedback/fullscreen-state";
+import { useAuthStore } from "@/features/auth/store/auth-store";
 import { KanbanBoard } from "@/features/pipeline/components/kanban-board";
 import { PipelineLeadCreateCard } from "@/features/pipeline/components/pipeline-lead-create-card";
 import type { BoardDeal, BoardStage, PipelineBoard } from "@/types/pipeline";
@@ -73,16 +75,53 @@ function removeBoardDeal(board: PipelineBoard, dealId: string) {
 
 export function PipelinePage() {
   const queryClient = useQueryClient();
+  const user = useAuthStore((state) => state.user);
   const [boardState, setBoardState] = useState<PipelineBoard | null>(null);
   const [draggingItem, setDraggingItem] = useState<DraggingItemState | null>(null);
   const [selectedDealId, setSelectedDealId] = useState<string | null>(null);
   const [pendingLeadId, setPendingLeadId] = useState<string | null>(null);
   const [deletingDealId, setDeletingDealId] = useState<string | null>(null);
   const [moveError, setMoveError] = useState("");
+  const [selectedMemberUserId, setSelectedMemberUserId] = useState<string | null>(null);
+
+  const currentRole = user?.current_membership?.role ?? null;
+  const canChooseBoardMember =
+    currentRole === "owner" || currentRole === "admin" || currentRole === "manager";
+
+  const teamMembersQuery = useQuery({
+    queryKey: ["auth", "team-members"],
+    queryFn: getTeamMembers,
+    enabled: canChooseBoardMember,
+  });
+
+  useEffect(() => {
+    if (!user) {
+      setSelectedMemberUserId(null);
+      return;
+    }
+
+    if (!canChooseBoardMember) {
+      setSelectedMemberUserId(user.id);
+      return;
+    }
+
+    const teamMembers = teamMembersQuery.data ?? [];
+    if (!teamMembers.length) {
+      setSelectedMemberUserId(user.id);
+      return;
+    }
+
+    const hasSelectedMember = teamMembers.some((member) => member.user_id === selectedMemberUserId);
+    if (!selectedMemberUserId || !hasSelectedMember) {
+      setSelectedMemberUserId(user.id);
+    }
+  }, [canChooseBoardMember, selectedMemberUserId, teamMembersQuery.data, user]);
+
+  const boardMemberUserId = canChooseBoardMember ? selectedMemberUserId ?? user?.id ?? undefined : undefined;
 
   const boardQuery = useQuery({
-    queryKey: ["pipeline-board"],
-    queryFn: getPipelineBoard,
+    queryKey: ["pipeline-board", boardMemberUserId ?? "self"],
+    queryFn: () => getPipelineBoard(boardMemberUserId),
   });
 
   useEffect(() => {
@@ -134,6 +173,7 @@ export function PipelinePage() {
         amount: lead.estimated_value || undefined,
         lostReason,
         stageId: stage.id,
+        ownerId: boardMemberUserId,
       }),
     onMutate: ({ lead }) => {
       setPendingLeadId(lead.id);
@@ -279,6 +319,39 @@ export function PipelinePage() {
 
   return (
     <section className="stack">
+      {canChooseBoardMember ? (
+        <article className="card">
+          <div className="section-heading">
+            <div>
+              <p className="section-eyebrow">Visualizacao</p>
+              <h2>Pipeline individual por membro</h2>
+            </div>
+          </div>
+          <label className="form-field">
+            <span>Membro da equipe</span>
+            <select
+              value={selectedMemberUserId ?? user?.id ?? ""}
+              disabled={teamMembersQuery.isLoading || !teamMembersQuery.data?.length}
+              onChange={(event) => {
+                setSelectedDealId(null);
+                setSelectedMemberUserId(event.target.value);
+              }}
+            >
+              {!teamMembersQuery.data?.length ? (
+                <option value={selectedMemberUserId ?? user?.id ?? ""}>
+                  {teamMembersQuery.isLoading ? "Carregando membros..." : "Nenhum membro disponivel"}
+                </option>
+              ) : (
+                (teamMembersQuery.data ?? []).map((member) => (
+                  <option key={member.id} value={member.user_id}>
+                    {(member.full_name || member.email).trim()} ({member.role})
+                  </option>
+                ))
+              )}
+            </select>
+          </label>
+        </article>
+      ) : null}
       <PipelineLeadCreateCard
         draggingLeadId={draggingItem?.type === "lead" ? draggingItem.lead.id : null}
         onLeadDragEnd={() => setDraggingItem(null)}

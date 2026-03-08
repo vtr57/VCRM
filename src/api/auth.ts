@@ -1,5 +1,5 @@
 import { apiFetch } from "@/api/client";
-import type { AuthMeResponse, AuthSessionResponse } from "@/types/auth";
+import type { AuthMeResponse, AuthSessionResponse, TeamMember } from "@/types/auth";
 
 export interface LoginPayload {
   email: string;
@@ -19,4 +19,8 @@ export async function login(payload: LoginPayload) {
 
 export async function getCurrentSession() {
   return apiFetch<AuthMeResponse>("/auth/me/");
+}
+
+export async function getTeamMembers() {
+  return apiFetch<TeamMember[]>("/auth/team-members/");
 }
