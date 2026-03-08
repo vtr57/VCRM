@@ -4,6 +4,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { KanbanBoard } from "@/features/pipeline/components/kanban-board";
 import type { BoardStage } from "@/types/pipeline";
 
+type AnimationFrameStep = (time: number) => void;
+
 function buildStages(): BoardStage[] {
   return [
     {
@@ -56,11 +58,11 @@ describe("KanbanBoard", () => {
   });
 
   it("auto-scrolls the board to the right while dragging near the visible edge", () => {
-    let animationFrame: FrameRequestCallback | null = null;
+    const scheduledFrame: { current: AnimationFrameStep | null } = { current: null };
     let scrollLeft = 120;
 
     vi.spyOn(window, "requestAnimationFrame").mockImplementation((callback: FrameRequestCallback) => {
-      animationFrame = callback;
+      scheduledFrame.current = (time: number) => callback(time);
       return 1;
     });
     vi.spyOn(window, "cancelAnimationFrame").mockImplementation(() => {});
@@ -107,8 +109,9 @@ describe("KanbanBoard", () => {
       }) as DOMRect;
 
     fireEvent.dragOver(boardElement, { clientX: 390 });
-    expect(animationFrame).not.toBeNull();
+    expect(scheduledFrame.current).not.toBeNull();
 
+    const animationFrame = scheduledFrame.current;
     if (!animationFrame) {
       throw new Error("Expected requestAnimationFrame to be scheduled.");
     }
