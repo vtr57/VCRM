@@ -85,8 +85,7 @@ export function PipelinePage() {
   const [selectedMemberUserId, setSelectedMemberUserId] = useState<string | null>(null);
 
   const currentRole = user?.current_membership?.role ?? null;
-  const canChooseBoardMember =
-    currentRole === "owner" || currentRole === "admin" || currentRole === "manager";
+  const canChooseBoardMember = currentRole === "owner" || currentRole === "admin";
 
   const teamMembersQuery = useQuery({
     queryKey: ["auth", "team-members"],
