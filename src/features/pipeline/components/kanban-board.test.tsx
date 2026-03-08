@@ -109,7 +109,11 @@ describe("KanbanBoard", () => {
     fireEvent.dragOver(boardElement, { clientX: 390 });
     expect(animationFrame).not.toBeNull();
 
-    animationFrame?.(16);
+    if (!animationFrame) {
+      throw new Error("Expected requestAnimationFrame to be scheduled.");
+    }
+
+    animationFrame(16);
 
     expect(scrollLeft).toBeGreaterThan(120);
     expect(window.requestAnimationFrame).toHaveBeenCalled();
